@@ -1,1 +1,1 @@
-export type TranslationKeys = 'appName';
+export type TranslationKeys = 'appName' | 'search' | 'queueNamePlaceholder';

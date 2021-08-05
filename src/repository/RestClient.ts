@@ -13,7 +13,7 @@ if (!global.atob) {
 
 const instance = axios.create({
   baseURL: Config.API_URL,
-  timeout: 40000,
+  timeout: 30000,
   auth: {
     username: Config.API_USERNAME,
     password: Config.API_PASSWORD,

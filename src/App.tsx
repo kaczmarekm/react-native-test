@@ -1,28 +1,36 @@
-import './i18n';
+import './localizable';
 
 import React, { useEffect } from 'react';
-import { StatusBar } from 'react-native';
+import { StyleSheet, StatusBar, View, Platform, UIManager } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { PersistGate } from 'redux-persist/integration/react';
-import { Provider } from 'react-redux';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider, useDispatch } from 'react-redux';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { withDevMenuTrigger } from 'react-native-devmenu-trigger';
 
 import MainNavigator from './navigation/MainNavigator';
 import { StoreConfigurator } from './store';
+import { fetchQueueFirstTime } from './queue/actions';
 import { isReadyRef, navigationRef } from './navigation/RootNavigator';
+import { Colors } from './utils/colors';
 
 const { persistor, store } = new StoreConfigurator().config();
 
+if (
+  Platform.OS === 'android' &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 const App = () => {
   const routeNameRef = React.useRef<string>();
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(fetchQueueFirstTime());
     SplashScreen.hide();
-  }, []);
-
-  useEffect(() => {
     return () => {
       isReadyRef.current = false;
     };
@@ -48,17 +56,29 @@ const AppShell = () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <SafeAreaProvider>
-          <StatusBar
-            barStyle="light-content"
-            translucent
-            backgroundColor="transparent"
-          />
-          <App />
-        </SafeAreaProvider>
+        <View style={styles.container}>
+          <SafeAreaView style={styles.safeAreaView}>
+            <StatusBar
+              barStyle="light-content"
+              translucent
+              backgroundColor="transparent"
+            />
+            <App />
+          </SafeAreaView>
+        </View>
       </PersistGate>
     </Provider>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
+  safeAreaView: {
+    flex: 1,
+  },
+});
 
 export default withDevMenuTrigger(AppShell);

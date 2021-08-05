@@ -1,7 +1,8 @@
 import React, { MutableRefObject } from 'react';
 import { NavigationContainerRef } from '@react-navigation/native';
-import { RouteName } from './MainNavigator';
+
 import { Logger } from '../logger';
+import { RouteName } from './MainNavigator';
 
 export const isReadyRef: MutableRefObject<boolean | null> = React.createRef();
 

@@ -1,21 +1,62 @@
-import { actionChannel, call, put, take } from 'redux-saga/effects';
+import {
+  actionChannel,
+  call,
+  delay,
+  fork,
+  put,
+  take,
+} from 'redux-saga/effects';
+
 import { Logger } from '../logger';
 import { RestClient } from '../repository/RestClient';
-import { QueueActionType, queueFetched } from './actions';
+import {
+  FetchQueueAction,
+  FetchQueueFirstTimeAction,
+  QueueActionType,
+  queueFetched,
+  queueFetchError,
+} from './actions';
+
+const QUEUE_FETCHING_INTERVAL = 30 * 1000; // refresh every 30 seconds
 
 export function* handleQueue(): Generator<any, any, any> {
-  const channel = yield actionChannel([QueueActionType.FetchQueue]);
+  const channel = yield actionChannel([
+    QueueActionType.FetchQueueFirstTime,
+    QueueActionType.FetchQueue,
+  ]);
   const backend = new RestClient();
 
   while (true) {
-    yield take(channel);
+    const action: FetchQueueFirstTimeAction | FetchQueueAction = yield take(
+      channel,
+    );
 
-    try {
-      const { data } = yield call([backend, backend.fetchQueue], 'gj9fs');
-      console.log('xxx', JSON.stringify(data));
-      // yield put(queueFetched(data));
-    } catch (error) {
-      Logger.error(`Fetching queue error: ${error.message}`);
+    switch (action.type) {
+      case QueueActionType.FetchQueueFirstTime:
+        yield fork(handleQueueAutoUpdate, backend);
+        break;
+      case QueueActionType.FetchQueue:
+        yield call(handleFetchQueue, backend);
+        break;
     }
+  }
+}
+
+function* handleQueueAutoUpdate(backend: RestClient) {
+  while (true) {
+    yield call(handleFetchQueue, backend);
+    yield delay(QUEUE_FETCHING_INTERVAL);
+  }
+}
+
+function* handleFetchQueue(backend: RestClient) {
+  try {
+    const {
+      data: { queueData },
+    } = yield call([backend, backend.fetchQueue], 'gj9fs');
+    yield put(queueFetched(queueData));
+  } catch (error) {
+    yield put(queueFetchError());
+    Logger.error(`Fetching queue error: ${error.message}`);
   }
 }
