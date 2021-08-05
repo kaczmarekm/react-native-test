@@ -1,3 +1,5 @@
+import { isDev } from '../../packages/is-dev';
+
 enum LogLevel {
   Error = 'error',
   Warn = 'warn',
@@ -7,7 +9,7 @@ enum LogLevel {
 }
 
 const logEvent = (level: LogLevel, message: string, obj?: object | string) => {
-  if (__DEV__) {
+  if (isDev) {
     console[level](message, obj);
   }
 };

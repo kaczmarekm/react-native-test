@@ -45,9 +45,7 @@ export function fetchQueueFirstTime(): FetchQueueFirstTimeAction {
   };
 }
 
-export function fetchQueue(
-  shouldAutoUpdate: boolean = false,
-): FetchQueueAction {
+export function fetchQueue(): FetchQueueAction {
   return {
     type: QueueActionType.FetchQueue,
     meta: { thunk: true },

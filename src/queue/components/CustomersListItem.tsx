@@ -6,8 +6,6 @@ import {
   StyleSheet,
   LayoutAnimation,
 } from 'react-native';
-import Config from 'react-native-config';
-import FastImage from 'react-native-fast-image';
 import md5 from 'md5';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
@@ -15,20 +13,21 @@ import { formatRelative } from 'date-fns';
 
 import { Colors } from '../../utils/colors';
 import { Customer } from '../../repository/models/Queue';
+import { FastImage } from '../../../packages/fast-image';
+import { getEnv } from '../../../packages/config';
 
 const avatarPlaceholderUri =
   'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';
 
 export default function CustomersListItem({ item }: { item: Customer }) {
   const [collapsed, setCollapsed] = useState(true);
-  const hasEmailAddress = !!item.customer.emailAddress;
   const expectedTimeFormatted = formatRelative(
     new Date(item.expectedTime),
     new Date(),
   );
-  const imageUrl = hasEmailAddress
-    ? `${Config.GRAVATAR_API_URL}${md5(
-        item.customer.emailAddress?.trim().toLowerCase(),
+  const imageUrl = !!item.customer.emailAddress
+    ? `${getEnv('GRAVATAR_API_URL')}${md5(
+        item.customer.emailAddress.trim().toLowerCase(),
       )}`
     : avatarPlaceholderUri;
   const handleSetCollapsed = (collapsed: boolean) => {

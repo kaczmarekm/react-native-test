@@ -21,7 +21,7 @@ export default function QueueScreen() {
   const fetchingQueueData = useSelector(fetchingQueueDataSelector);
   const queueCustomers = useSelector(queueCustomersSortedAndFiltered);
 
-  const handleCustomersListRefresh = () => dispatch(fetchQueue(true));
+  const handleCustomersListRefresh = () => dispatch(fetchQueue());
   const handleCustomersListSearch = (text: string) =>
     dispatch(setCustomersListSearchTerm(text));
 

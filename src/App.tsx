@@ -2,18 +2,17 @@ import './localizable';
 
 import React, { useEffect } from 'react';
 import { StyleSheet, StatusBar, View, Platform, UIManager } from 'react-native';
-import SplashScreen from 'react-native-splash-screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider, useDispatch } from 'react-redux';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { withDevMenuTrigger } from 'react-native-devmenu-trigger';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import MainNavigator from './navigation/MainNavigator';
+import { Colors } from './utils/colors';
+import { SplashScreen } from '../packages/splash-screen';
 import { StoreConfigurator } from './store';
 import { fetchQueueFirstTime } from './queue/actions';
 import { isReadyRef, navigationRef } from './navigation/RootNavigator';
-import { Colors } from './utils/colors';
 
 const { persistor, store } = new StoreConfigurator().config();
 
@@ -34,7 +33,7 @@ const App = () => {
     return () => {
       isReadyRef.current = false;
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <NavigationContainer
@@ -52,20 +51,22 @@ const App = () => {
   );
 };
 
-const AppShell = () => {
+export default () => {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
-        <View style={styles.container}>
-          <SafeAreaView style={styles.safeAreaView}>
-            <StatusBar
-              barStyle="light-content"
-              translucent
-              backgroundColor="transparent"
-            />
-            <App />
-          </SafeAreaView>
-        </View>
+        <SafeAreaProvider>
+          <View style={styles.container}>
+            <SafeAreaView style={styles.safeAreaView}>
+              <StatusBar
+                barStyle="light-content"
+                translucent
+                backgroundColor="transparent"
+              />
+              <App />
+            </SafeAreaView>
+          </View>
+        </SafeAreaProvider>
       </PersistGate>
     </Provider>
   );
@@ -80,5 +81,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-export default withDevMenuTrigger(AppShell);

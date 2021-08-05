@@ -1,7 +1,9 @@
 import axios from 'axios';
-import Config from 'react-native-config';
 import { decode, encode } from 'base-64';
+import { Platform } from 'react-native';
 
+import { getEnv } from '../../packages/config';
+import { isDev } from '../../packages/is-dev';
 import { Logger } from '../logger';
 
 if (!global.btoa) {
@@ -12,15 +14,18 @@ if (!global.atob) {
 }
 
 const instance = axios.create({
-  baseURL: Config.API_URL,
+  baseURL: Platform.select({
+    web: `http://localhost:8080/${getEnv('API_URL')}`,
+    default: getEnv('API_URL'),
+  }),
   timeout: 30000,
   auth: {
-    username: Config.API_USERNAME,
-    password: Config.API_PASSWORD,
+    username: getEnv('API_USERNAME'),
+    password: getEnv('API_PASSWORD'),
   },
 });
 
-if (__DEV__) {
+if (isDev) {
   instance.interceptors.request.use((request) => {
     Logger.log('[RestClient] Starting Request', request);
     return request;
@@ -31,7 +36,7 @@ if (__DEV__) {
       return response;
     },
     (error) => {
-      Logger.log('[RestClient] Error:', error);
+      Logger.log('[RestClient] Error:', { ...error });
       return Promise.reject(error);
     },
   );

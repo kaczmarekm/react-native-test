@@ -10,3 +10,9 @@ declare module 'react-native-config' {
 
   export default Config;
 }
+
+export type Env =
+  | 'API_URL'
+  | 'API_USERNAME'
+  | 'API_PASSWORD'
+  | 'GRAVATAR_API_URL';

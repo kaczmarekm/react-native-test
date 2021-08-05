@@ -1,6 +1,6 @@
 /* eslint-disable global-require */
-import Localizable from 'react-native-i18n';
 import { TranslationKeys } from '../../types/translations';
+import { Localizable } from '../../packages/i18n';
 
 Localizable.fallbacks = true;
 Localizable.defaultLocale = 'en';

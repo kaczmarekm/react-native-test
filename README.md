@@ -4,13 +4,15 @@
 
 1. Create `.env` file in project root, paste following envs:
    ```
-   API_URL=https://app.qudini.com/api/
-   API_USERNAME=codetest1
-   API_PASSWORD=codetest100
-   GRAVATAR_API_URL=https://www.gravatar.com/avatar/
+   REACT_APP_API_URL=https://app.qudini.com/api/
+   REACT_APP_API_USERNAME=codetest1
+   REACT_APP_API_PASSWORD=codetest100
+   REACT_APP_GRAVATAR_API_URL=https://www.gravatar.com/avatar/
    ```
 2. Run
-   `$ yarn && cd ios && pod install && cd .. && yarn ios`
+   iOS: `$ yarn && cd ios && pod install && cd .. && yarn ios`
+   Android: `$ yarn && yarn android`
+   web: `$ yarn && yarn web`
 
 # 2. Task description
 
