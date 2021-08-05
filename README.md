@@ -10,9 +10,9 @@
    REACT_APP_GRAVATAR_API_URL=https://www.gravatar.com/avatar/
    ```
 2. Run
-   iOS: `$ yarn && cd ios && pod install && cd .. && yarn ios`
-   Android: `$ yarn && yarn android`
-   web: `$ yarn && yarn web`
+   * iOS: `$ yarn && cd ios && pod install && cd .. && yarn ios`
+   * Android: `$ yarn && yarn android`
+   * web: `$ yarn && yarn web`
 
 # 2. Task description
 
