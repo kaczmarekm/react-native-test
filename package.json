@@ -57,10 +57,10 @@
     "@types/react-native-i18n": "^2.0.0",
     "@types/react-redux": "7.1.18",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
-    "babel-loader": "^8.2.2",
+    "babel-loader": "8.1.0",
     "babel-plugin-react-native-web": "^0.17.1",
     "concurrently": "^6.2.0",
-    "cors-anywhere": "^s0.4.4",
+    "cors-anywhere": "^0.4.4",
     "eslint": "^7.32.0",
     "eslint-config-airbnb-typescript": "^12.3.1",
     "eslint-config-prettier": "^8.3.0",
@@ -78,9 +78,9 @@
     "react-test-renderer": "17.0.1",
     "typescript": "^4.3.5",
     "url-loader": "^4.1.1",
-    "webpack": "^4.44.2",
+    "webpack": "4.44.2",
     "webpack-cli": "^4.7.2",
-    "webpack-dev-server": "3.11.0"
+    "webpack-dev-server": "3.11.1"
   },
   "jest": {
     "preset": "react-native"
