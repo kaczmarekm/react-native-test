@@ -1,5 +1,5 @@
-const path = require('path');
-const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+import path from 'path';
+import ModuleScopePlugin from 'react-dev-utils/ModuleScopePlugin';
 
 module.exports = {
   paths: function (paths, env) {
