@@ -55,7 +55,7 @@ function* handleFetchQueue(backend: RestClient) {
       data: { queueData },
     } = yield call([backend, backend.fetchQueue], 'gj9fs');
     yield put(queueFetched(queueData));
-  } catch (error) {
+  } catch (error: any) {
     yield put(queueFetchError());
     Logger.error(`Fetching queue error: ${error.message}`);
   }

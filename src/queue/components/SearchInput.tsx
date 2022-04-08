@@ -1,28 +1,7 @@
 import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
-
 import { Colors } from '../../utils/colors';
 import { translate } from '../../localizable';
-
-interface SearchInputProps {
-  searchTerm: string;
-  handleSearchTermChange: (text: string) => void;
-}
-
-export default function SearchInput({
-  searchTerm,
-  handleSearchTermChange,
-}: SearchInputProps) {
-  return (
-    <TextInput
-      style={styles.searchInput}
-      value={searchTerm}
-      onChangeText={handleSearchTermChange}
-      placeholder={translate('search')}
-      placeholderTextColor={Colors.background}
-    />
-  );
-}
 
 const styles = StyleSheet.create({
   searchInput: {
@@ -36,3 +15,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 });
+
+interface SearchInputProps {
+  searchTerm: string;
+  handleSearchTermChange: (text: string) => void;
+}
+
+const SearchInput = ({
+  searchTerm,
+  handleSearchTermChange,
+}: SearchInputProps) => (
+  <TextInput
+    style={styles.searchInput}
+    value={searchTerm}
+    onChangeText={handleSearchTermChange}
+    placeholder={translate('search')}
+    placeholderTextColor={Colors.background}
+  />
+);
+
+export default SearchInput;

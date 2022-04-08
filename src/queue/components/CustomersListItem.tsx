@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -15,55 +15,6 @@ import { Colors } from '../../utils/colors';
 import { Customer } from '../../repository/models/Queue';
 import { FastImage } from '../../../packages/fast-image';
 import { getEnv } from '../../../packages/config';
-
-const avatarPlaceholderUri =
-  'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';
-
-export default function CustomersListItem({ item }: { item: Customer }) {
-  const [collapsed, setCollapsed] = useState(true);
-  const expectedTimeFormatted = formatRelative(
-    new Date(item.expectedTime),
-    new Date(),
-  );
-  const imageUrl = !!item.customer.emailAddress
-    ? `${getEnv('GRAVATAR_API_URL')}${md5(
-        item.customer.emailAddress.trim().toLowerCase(),
-      )}`
-    : avatarPlaceholderUri;
-  const handleSetCollapsed = (collapsed: boolean) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setCollapsed(collapsed);
-  };
-  return (
-    <TouchableOpacity onPress={() => handleSetCollapsed(!collapsed)}>
-      <View style={styles.customerItem}>
-        <Text style={styles.customerItemNameText} numberOfLines={1}>
-          {item.currentPosition}. {item.customer.name}
-        </Text>
-        <View style={styles.customerItemRightPanel}>
-          <Text style={styles.customerItemDateText}>
-            {expectedTimeFormatted}
-          </Text>
-          <View style={styles.downArrowView}>
-            <FontAwesomeIcon
-              icon={collapsed ? faChevronDown : faChevronUp}
-              size={18}
-            />
-          </View>
-        </View>
-      </View>
-      {!collapsed && (
-        <View style={styles.userAvatarView}>
-          <FastImage
-            source={{ uri: imageUrl }}
-            resizeMode={FastImage.resizeMode.contain}
-            style={styles.userAvatar}
-          />
-        </View>
-      )}
-    </TouchableOpacity>
-  );
-}
 
 const styles = StyleSheet.create({
   customerItem: {
@@ -106,3 +57,62 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 });
+
+const avatarPlaceholderUri =
+  'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png';
+
+const CustomersListItem = ({ item }: { item: Customer }) => {
+  const [collapsed, setCollapsed] = useState(true);
+
+  const toggleCollapsed = useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setCollapsed(!collapsed);
+  }, [setCollapsed, collapsed]);
+
+  const expectedTimeFormatted = useMemo(
+    () => formatRelative(new Date(item.expectedTime), new Date()),
+    [item.expectedTime],
+  );
+
+  const imageUrl = useMemo(
+    () =>
+      !!item.customer.emailAddress
+        ? `${getEnv('GRAVATAR_API_URL')}${md5(
+            item.customer.emailAddress.trim().toLowerCase(),
+          )}`
+        : avatarPlaceholderUri,
+    [item.customer.emailAddress],
+  );
+
+  return (
+    <TouchableOpacity onPress={toggleCollapsed}>
+      <View style={styles.customerItem}>
+        <Text style={styles.customerItemNameText} numberOfLines={1}>
+          {item.currentPosition}. {item.customer.name}
+        </Text>
+        <View style={styles.customerItemRightPanel}>
+          <Text style={styles.customerItemDateText}>
+            {expectedTimeFormatted}
+          </Text>
+          <View style={styles.downArrowView}>
+            <FontAwesomeIcon
+              icon={collapsed ? faChevronDown : faChevronUp}
+              size={18}
+            />
+          </View>
+        </View>
+      </View>
+      {!collapsed && (
+        <View style={styles.userAvatarView}>
+          <FastImage
+            source={{ uri: imageUrl }}
+            resizeMode={FastImage.resizeMode.contain}
+            style={styles.userAvatar}
+          />
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+};
+
+export default CustomersListItem;

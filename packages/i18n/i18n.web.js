@@ -3,6 +3,6 @@ export const Localizable = {
   defaultLocale: 'en',
   translations: {},
   t: (key) => {
-    return Localizable.translations[Localizable.defaultLocale].key;
+    return Localizable.translations[Localizable.defaultLocale][key];
   },
 };

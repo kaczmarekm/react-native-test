@@ -17,7 +17,7 @@ import mainReducer from './mainReducer';
 
 export type AppState = ReturnType<typeof mainReducer>;
 
-const actionLogger: Middleware = (_api) => (next) => (action: Action) => {
+const actionLogger: Middleware = () => (next) => (action: Action) => {
   Logger.debug(action.type);
   return next(action);
 };

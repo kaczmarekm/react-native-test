@@ -6,13 +6,22 @@ import { NavigationContainer } from '@react-navigation/native';
 import { PersistGate } from 'redux-persist/integration/react';
 import { Provider, useDispatch } from 'react-redux';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-
 import MainNavigator from './navigation/MainNavigator';
 import { Colors } from './utils/colors';
 import { SplashScreen } from '../packages/splash-screen';
 import { StoreConfigurator } from './store';
 import { fetchQueueFirstTime } from './queue/actions';
 import { isReadyRef, navigationRef } from './navigation/RootNavigator';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
+  safeAreaView: {
+    flex: 1,
+  },
+});
 
 const { persistor, store } = new StoreConfigurator().config();
 
@@ -71,13 +80,3 @@ export default () => {
     </Provider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  safeAreaView: {
-    flex: 1,
-  },
-});
