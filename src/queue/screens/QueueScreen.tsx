@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, LayoutAnimation } from 'react-native';
+import { LayoutAnimation, StyleSheet, Text, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Colors } from '../../utils/colors';
-import { fetchQueue, setCustomersListSearchTerm } from '../actions';
-import {
-  queueNameSelector,
-  queueCustomersSortedAndFiltered,
-  fetchingQueueDataSelector,
-  customersListSearchTermSelector,
-} from '../selectors';
-import SearchInput from '../components/SearchInput';
+import { fetchQueue, setCustomersListSearchTerm } from '../actionCreators';
 import CustomersList from '../components/CustomersList';
+import SearchInput from '../components/SearchInput';
+import {
+  customersListSearchTermSelector,
+  fetchingQueueDataSelector,
+  queueCustomersSortedAndFiltered,
+  queueNameSelector,
+} from '../selectors';
 
 const styles = StyleSheet.create({
   container: {

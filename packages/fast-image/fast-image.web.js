@@ -1,6 +1,6 @@
 import { Image } from 'react-native';
 
 const FastImage = Image;
-FastImage.resizeMode = { contain: 'contain' };
+FastImage.resizeMode = { contain: 'resize' };
 
 export { FastImage };

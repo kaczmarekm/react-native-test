@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { decode, encode } from 'base-64';
 import { Platform } from 'react-native';
-
 import { getEnv } from '../../packages/config';
 import { isDev } from '../../packages/is-dev';
 import { Logger } from '../logger';
@@ -15,13 +14,13 @@ if (!global.atob) {
 
 const instance = axios.create({
   baseURL: Platform.select({
-    web: `http://localhost:8080/${getEnv('API_URL')}`,
+    web: `http://localhost:8081/${getEnv('API_URL')}`,
     default: getEnv('API_URL'),
   }),
   timeout: 30000,
   auth: {
-    username: getEnv('API_USERNAME'),
-    password: getEnv('API_PASSWORD'),
+    username: getEnv('API_USERNAME') || '',
+    password: getEnv('API_PASSWORD') || '',
   },
 });
 
@@ -42,6 +41,8 @@ if (isDev) {
   );
 }
 
-export class RestClient {
-  fetchQueue = (queueId: string) => instance.get(`/queue/${queueId}`);
-}
+const RestClient = {
+  fetchQueue: (queueId: string) => instance.get(`/queue/${queueId}`),
+};
+
+export default RestClient;

@@ -1,25 +1,22 @@
-import './localizable';
-
-import React, { useEffect } from 'react';
-import { StyleSheet, StatusBar, View, Platform, UIManager } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { PersistGate } from 'redux-persist/integration/react';
-import { Provider, useDispatch } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
+import { Platform, StatusBar, StyleSheet, UIManager } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import MainNavigator from './navigation/MainNavigator';
-import { Colors } from './utils/colors';
+import { Provider, useDispatch } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 import { SplashScreen } from '../packages/splash-screen';
+import './localizable';
+import { isReadyRef, navigationRef } from './navigation/NavigationService';
+import RootNavigator from './navigation/RootNavigator';
+import { fetchQueueFirstTime } from './queue/actionCreators';
 import { StoreConfigurator } from './store';
-import { fetchQueueFirstTime } from './queue/actions';
-import { isReadyRef, navigationRef } from './navigation/RootNavigator';
+import { Colors } from './utils/colors';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
-  },
-  safeAreaView: {
-    flex: 1,
   },
 });
 
@@ -44,39 +41,41 @@ const App = () => {
     };
   }, [dispatch]);
 
+  const onNavigationContainerReady = useCallback(() => {
+    isReadyRef.current = true;
+    routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+  }, []);
+
+  const onNavigationContainerStateChange = useCallback(() => {
+    const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
+    routeNameRef.current = currentRouteName;
+  }, []);
+
   return (
     <NavigationContainer
       ref={navigationRef}
-      onReady={() => {
-        isReadyRef.current = true;
-        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
-      }}
-      onStateChange={() => {
-        const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
-        routeNameRef.current = currentRouteName;
-      }}>
-      <MainNavigator />
+      onReady={onNavigationContainerReady}
+      onStateChange={onNavigationContainerStateChange}>
+      <RootNavigator />
     </NavigationContainer>
   );
 };
 
-export default () => {
-  return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <SafeAreaProvider>
-          <View style={styles.container}>
-            <SafeAreaView style={styles.safeAreaView}>
-              <StatusBar
-                barStyle="light-content"
-                translucent
-                backgroundColor="transparent"
-              />
-              <App />
-            </SafeAreaView>
-          </View>
-        </SafeAreaProvider>
-      </PersistGate>
-    </Provider>
-  );
-};
+export default () => (
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <GestureHandlerRootView style={styles.container}>
+            <StatusBar
+              barStyle="light-content"
+              translucent
+              backgroundColor="transparent"
+            />
+            <App />
+          </GestureHandlerRootView>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </PersistGate>
+  </Provider>
+);

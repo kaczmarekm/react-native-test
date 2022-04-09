@@ -6,25 +6,22 @@ import {
   put,
   take,
 } from 'redux-saga/effects';
-
+import RestClient from '../api/RestClient';
 import { Logger } from '../logger';
-import { RestClient } from '../repository/RestClient';
+import { fetchQueueFailure, fetchQueueSuccess } from './actionCreators';
 import {
   FetchQueueAction,
   FetchQueueFirstTimeAction,
   QueueActionType,
-  queueFetched,
-  queueFetchError,
-} from './actions';
+} from './types';
 
-const QUEUE_FETCHING_INTERVAL = 30 * 1000; // refresh every 30 seconds
+const QUEUE_FETCHING_INTERVAL = 30 * 1000; // 30 seconds
 
 export function* handleQueue(): Generator<any, any, any> {
   const channel = yield actionChannel([
     QueueActionType.FetchQueueFirstTime,
     QueueActionType.FetchQueue,
   ]);
-  const backend = new RestClient();
 
   while (true) {
     const action: FetchQueueFirstTimeAction | FetchQueueAction = yield take(
@@ -33,30 +30,30 @@ export function* handleQueue(): Generator<any, any, any> {
 
     switch (action.type) {
       case QueueActionType.FetchQueueFirstTime:
-        yield fork(handleQueueAutoUpdate, backend);
+        yield fork(handleQueueAutoUpdate);
         break;
       case QueueActionType.FetchQueue:
-        yield call(handleFetchQueue, backend);
+        yield call(handleFetchQueue);
         break;
     }
   }
 }
 
-function* handleQueueAutoUpdate(backend: RestClient) {
+function* handleQueueAutoUpdate() {
   while (true) {
-    yield call(handleFetchQueue, backend);
+    yield call(handleFetchQueue);
     yield delay(QUEUE_FETCHING_INTERVAL);
   }
 }
 
-function* handleFetchQueue(backend: RestClient) {
+function* handleFetchQueue() {
   try {
     const {
       data: { queueData },
-    } = yield call([backend, backend.fetchQueue], 'gj9fs');
-    yield put(queueFetched(queueData));
+    } = yield call([RestClient, RestClient.fetchQueue], 'gj9fs');
+    yield put(fetchQueueSuccess(queueData));
   } catch (error: any) {
-    yield put(queueFetchError());
+    yield put(fetchQueueFailure());
     Logger.error(`Fetching queue error: ${error.message}`);
   }
 }

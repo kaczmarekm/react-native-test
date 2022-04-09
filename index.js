@@ -1,13 +1,11 @@
-import 'react-native-gesture-handler';
-
 import { AppRegistry, Platform } from 'react-native';
+import 'react-native-gesture-handler';
 import App from './src/App';
-import { name as appName } from './app.json';
 
-AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent('queue', () => App);
 
 if (Platform.OS === 'web') {
-  AppRegistry.runApplication(appName, {
+  AppRegistry.runApplication('queue', {
     rootTag: document.getElementById('react-root'),
   });
 }

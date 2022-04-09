@@ -1,20 +1,19 @@
+import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { formatRelative } from 'date-fns';
+import md5 from 'md5';
 import React, { useCallback, useMemo, useState } from 'react';
 import {
-  View,
+  LayoutAnimation,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  LayoutAnimation,
+  View,
 } from 'react-native';
-import md5 from 'md5';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import { formatRelative } from 'date-fns';
-
-import { Colors } from '../../utils/colors';
-import { Customer } from '../../repository/models/Queue';
-import { FastImage } from '../../../packages/fast-image';
 import { getEnv } from '../../../packages/config';
+import { FastImage } from '../../../packages/fast-image';
+import { Customer } from '../../api/models/Queue';
+import { Colors } from '../../utils/colors';
 
 const styles = StyleSheet.create({
   customerItem: {
@@ -48,8 +47,9 @@ const styles = StyleSheet.create({
   },
   userAvatarView: {
     paddingVertical: 20,
-    paddingLeft: 30,
+    paddingHorizontal: 30,
     alignSelf: 'stretch',
+    alignItems: 'center',
   },
   userAvatar: {
     width: 200,
@@ -65,8 +65,8 @@ const CustomersListItem = ({ item }: { item: Customer }) => {
   const [collapsed, setCollapsed] = useState(true);
 
   const toggleCollapsed = useCallback(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setCollapsed(!collapsed);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }, [setCollapsed, collapsed]);
 
   const expectedTimeFormatted = useMemo(

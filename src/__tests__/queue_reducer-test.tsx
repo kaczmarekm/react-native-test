@@ -1,10 +1,9 @@
-import { queueReducer, initialState } from '../src/queue/reducer';
 import {
-  setCustomersListSearchTerm,
   fetchQueue,
-  queueFetched,
   queueFetchError,
-} from '../src/queue/actions';
+  setCustomersListSearchTerm,
+} from '../queue/actions';
+import { initialState, queueReducer } from '../queue/reducer';
 
 test('should return initial state', () => {
   expect(queueReducer(undefined, {})).toEqual(initialState());

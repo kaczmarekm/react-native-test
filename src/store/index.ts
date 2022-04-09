@@ -1,16 +1,15 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import {
   Action,
+  applyMiddleware,
+  createStore,
   DeepPartial,
   Middleware,
   PreloadedState,
-  applyMiddleware,
-  createStore,
 } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 import { middleware as thunkMiddleware } from 'redux-saga-thunk';
-import AsyncStorage from '@react-native-community/async-storage';
-
 import { Logger } from '../logger';
 import { rootSaga } from '../saga';
 import mainReducer from './mainReducer';
@@ -18,7 +17,7 @@ import mainReducer from './mainReducer';
 export type AppState = ReturnType<typeof mainReducer>;
 
 const actionLogger: Middleware = () => (next) => (action: Action) => {
-  Logger.debug(action.type);
+  Logger.debug(action.type, action);
   return next(action);
 };
 

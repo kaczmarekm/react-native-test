@@ -75,3 +75,6 @@ coverage/
 reports/
 
 builds/
+
+# Web
+web/dist

@@ -1,0 +1,22 @@
+diff --git a/node_modules/react-native/ReactCommon/jsi/jsi/JSIDynamic.cpp b/node_modules/react-native/ReactCommon/jsi/jsi/JSIDynamic.cpp
+index 4464cc3..f50f1b5 100644
+--- a/node_modules/react-native/ReactCommon/jsi/jsi/JSIDynamic.cpp
++++ b/node_modules/react-native/ReactCommon/jsi/jsi/JSIDynamic.cpp
+@@ -135,7 +135,9 @@ void dynamicFromValueShallow(
+     if (obj.isArray(runtime)) {
+       output = folly::dynamic::array();
+     } else if (obj.isFunction(runtime)) {
+-      throw JSError(runtime, "JS Functions are not convertible to dynamic");
++      // throw JSError(runtime, "JS Functions are not convertible to dynamic");
++      // Relates to https://github.com/facebook/react-native/pull/28037/files#diff-e2e439b7b9222821846c7e6f76e1491a677255deb881726cdeeebbce0e21f04e
++      output = nullptr;
+     } else {
+       output = folly::dynamic::object();
+     }
+diff --git a/node_modules/react-native/scripts/.packager.env b/node_modules/react-native/scripts/.packager.env
+new file mode 100644
+index 0000000..361f5fb
+--- /dev/null
++++ b/node_modules/react-native/scripts/.packager.env
+@@ -0,0 +1 @@
++export RCT_METRO_PORT=8081

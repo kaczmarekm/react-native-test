@@ -1,6 +1,5 @@
-import { createSelector } from 'reselect';
 import { compareAsc } from 'date-fns';
-
+import { createSelector } from 'reselect';
 import { AppState } from '../store';
 
 export const fetchingQueueDataSelector = (state: AppState) =>

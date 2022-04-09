@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, RefreshControl, StyleSheet } from 'react-native';
-import { Customer } from '../../repository/models/Queue';
+import { Customer } from '../../api/models/Queue';
 import CustomersListItem from './CustomersListItem';
 
 const styles = StyleSheet.create({

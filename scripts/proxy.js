@@ -1,7 +1,7 @@
-import cors_proxy from 'cors-anywhere';
+const cors_proxy = require('cors-anywhere');
 
 const run = async () => {
-  const port = 8080;
+  const port = 8081;
 
   cors_proxy
     .createServer({

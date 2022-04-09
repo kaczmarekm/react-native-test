@@ -1,5 +1,5 @@
-import { QueueData } from '../repository/models';
-import { QueueAction, QueueActionType } from './actions';
+import { QueueData } from '../api/models';
+import { QueueAction, QueueActionType } from './types';
 
 export interface QueueState {
   queueData?: QueueData;
@@ -25,13 +25,13 @@ export function queueReducer(
         ...state,
         fetchingQueueData: true,
       };
-    case QueueActionType.QueueFetched:
+    case QueueActionType.FetchQueueSuccess:
       return {
         ...state,
         queueData: action.queueData,
         fetchingQueueData: false,
       };
-    case QueueActionType.QueueFetchError:
+    case QueueActionType.FetchQueueFailure:
       return {
         ...state,
         fetchingQueueData: false,
